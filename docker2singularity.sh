@@ -20,7 +20,7 @@ if [ $# == 0 ] ; then
     echo $USAGE
     exit 1;
 fi
-mount_points="/oasis /projects /scratch /local-scratch /work /home1 /corral-repl /beegfs /share/PI /extra"
+mount_points="/oasis /projects /scratch /local-scratch /work /home1 /corral-repl /beegfs /share/PI /extra /data /oak"
 while getopts ':hm:' option; do
   case "$option" in
     h) echo "$USAGE"
@@ -164,8 +164,12 @@ rm -rf $TMPDIR
 ################################################################################
 ### Permissions ################################################################
 ################################################################################
+if [ "${mount_points}" ]; then
 echo "(6/9) Adding mount points..."
 singularity exec --writable --contain $new_container_name /bin/sh -c "mkdir -p ${mount_points}"
+else 
+echo "(6/9) Skipping mount points..."
+fi 
 
 # making sure that any user can read and execute everything in the container
 echo "(7/9) Fixing permissions..."
